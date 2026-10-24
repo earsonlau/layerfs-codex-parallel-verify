@@ -53,7 +53,7 @@ Without `--install`, the source directory you pass is the tree that gets shared.
 node bin/codex-parallel-verify.js spawn-n --name shop --count 3 --prefix hyp --json
 ```
 
-This is `branch.fork` from `main`. It copies no files. Names are `hyp-1`, `hyp-2`, `hyp-3`. A name that is already forked is not forked again. A refusal such as `Exists` is recorded for that name only and is not retried inside the command.
+This is `branch.fork` from `main`. It copies no files. Names are `hyp-1`, `hyp-2`, `hyp-3`. The default prefix is `hyp`. A name that is already forked is not forked again. A refusal such as `Exists` is recorded for that name only and is not retried inside the command.
 
 ### 3. Edit each candidate on its own Branch
 
@@ -75,7 +75,7 @@ node bin/codex-parallel-verify.js verify-all \
 
 For each Branch the CLI does, in order, and each call once:
 
-1. `sandbox.create` as needed (16 Workspaces per Sandbox).
+1. `sandbox.create` when a Branch is about to mount and no Sandbox has a free Workspace (16 per Sandbox). A Sandbox is not started ahead of the Branches that will use it.
 2. `workspace.mount(sandbox, branch)`.
 3. `workspace.exec` the verify command.
 4. `workspace.commit`, including when the command exits non-zero. The message is `verify <branch>: <command> (exit N)`.

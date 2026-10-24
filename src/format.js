@@ -31,11 +31,15 @@ export function renderReport(report) {
     lines.push("branch  result  exit  note");
     for (const result of report.results) {
       const discarded = report.discarded?.includes(result.branch);
+      const head = result.commit?.head ?? result.commit?.commit?.id ?? "";
+      const unmountNote = result.unmount ? `unmount ${result.unmount.code}` : "";
       const note = result.conflict
         ? "Conflict once, not retried"
         : result.error
           ? result.error.message
-          : result.commit?.head ?? result.commit?.commit?.id ?? "";
+          : unmountNote
+            ? (head ? `${head}; ${unmountNote}` : unmountNote)
+            : head;
       lines.push(`${result.branch}  ${resultLabel(result, discarded)}  ${result.exitCode ?? "—"}  ${note}`);
     }
   } else {

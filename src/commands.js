@@ -4,7 +4,7 @@ import { refusalOf, UsageError } from "./errors.js";
 import { withClient } from "./host.js";
 import { emptyLedger, loadLedger, saveLedger } from "./ledger.js";
 import { spaceReport } from "./metrics.js";
-import { assertName, boundedMessage, candidateNames } from "./names.js";
+import { assertName, boundedMessage, candidateNames, DEFAULT_PREFIX } from "./names.js";
 import { pin } from "./pin.js";
 import { resolveJobs } from "./pool.js";
 import { readStored } from "./stored.js";
@@ -195,7 +195,7 @@ export async function spawnN(runtime, LayerFS, {
   home,
   name,
   count,
-  prefix = "candidate",
+  prefix = DEFAULT_PREFIX,
   from = "main",
 } = {}) {
   assertName(from, "a from-ref");

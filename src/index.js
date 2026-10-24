@@ -5,7 +5,7 @@ export { applyEnv, endpointFile, openHost, projectEnv, storeFile, withClient } f
 export { loadSdk } from "./load.js";
 export { emptyLedger, ledgerPath, loadLedger, saveLedger } from "./ledger.js";
 export { formatBytes, spaceReport } from "./metrics.js";
-export { assertName, candidateNames, verifyMessage } from "./names.js";
+export { assertName, candidateNames, DEFAULT_PREFIX, verifyMessage } from "./names.js";
 export { pin, PACKAGE_ROOT } from "./pin.js";
 export { mapPool, resolveJobs } from "./pool.js";
 export { readStored } from "./stored.js";

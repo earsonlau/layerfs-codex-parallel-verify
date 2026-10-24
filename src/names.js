@@ -6,6 +6,8 @@ export const NAME = /^[a-z0-9](?:[a-z0-9_.-]{0,61}[a-z0-9])?$/;
 export const MAX_CANDIDATES = 256;
 export const SANDBOX_CAPACITY = 16;
 export const MESSAGE_BYTES = 4096;
+/** Branch names from spawn-n when --prefix is omitted: hyp-1, hyp-2, … */
+export const DEFAULT_PREFIX = "hyp";
 
 export function assertName(name, what) {
   if (typeof name !== "string" || !NAME.test(name)) {

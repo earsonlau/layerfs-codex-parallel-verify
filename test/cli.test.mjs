@@ -25,6 +25,7 @@ test("help mentions -C and the four commands without opening LayerFS", async () 
   assert.equal(opened, false);
   assert.match(io.out(), /codex exec -C/);
   assert.match(io.out(), /--worktree/);
+  assert.match(io.out(), /default prefix is hyp/);
   for (const command of ["init", "spawn-n", "verify-all", "report"]) {
     assert.match(io.out(), new RegExp(command));
   }

@@ -62,6 +62,9 @@ test("README Install, AGENTS.md, and the skill teach the Codex path", () => {
   assert.match(agents, /fork/);
   assert.match(readme, /npm test/);
   assert.match(readme, /Docker/);
+  assert.match(readme, /default prefix is `hyp`/);
+  assert.match(skill, /default prefix is `hyp`/);
+  assert.match(readme, /needs `node` and `npm`/);
 });
 
 test("plugin code uses only the public agent and runtime packages", () => {

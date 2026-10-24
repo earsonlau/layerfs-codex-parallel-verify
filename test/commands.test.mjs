@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 import { initProject, makeReport, spawnN, verifyAll } from "../src/commands.js";
+import { renderReport } from "../src/format.js";
 import { loadLedger } from "../src/ledger.js";
 import { SIZE_PROBE } from "../src/tree-bytes.js";
 import { verifyBranches } from "../src/verify.js";
@@ -115,6 +116,14 @@ test("a failing install is committed once and not published", async () => {
   assert.equal(ledger.install.exitCode, 1);
 });
 
+test("spawn-n defaults to prefix hyp", async () => {
+  const { home, runtime, client, LayerFS } = await fixture();
+  const ledger = await spawnN(runtime, LayerFS, { home, name: "shop", count: 2 });
+  const forks = named(client.calls, "branch.fork");
+  assert.deepEqual(forks.map((call) => call[1][0]), ["hyp-1", "hyp-2"]);
+  assert.deepEqual(ledger.requested, ["hyp-1", "hyp-2"]);
+});
+
 test("spawn-n forks each candidate once", async () => {
   const { home, source, runtime, client, LayerFS } = await fixture();
   await initProject(runtime, LayerFS, { home, name: "shop", source });
@@ -217,19 +226,114 @@ test("parallel verify mounts both branches before either commit", { timeout: 300
   }
 });
 
-test("seventeen branches use two sandboxes, each closed once", async () => {
+test("seventeen branches at jobs 4 share one sandbox", async () => {
   let next = 0;
   const client = scriptedClient({
     create: async () => ({ sandbox: String(++next), image: "sha256:abc" }),
   });
   const branches = Array.from({ length: 17 }, (_, index) => `hyp-${index + 1}`);
   await verifyBranches(client, { branches, command: "npm test", jobs: 4 });
+  assert.equal(named(client.calls, "sandbox.create").length, 1);
+  assert.equal(named(client.calls, "sandbox.close").length, 1);
+  const mounts = named(client.calls, "workspace.mount");
+  assert.equal(mounts.length, 17);
+  assert.ok(mounts.every((call) => call[1][0] === "1"));
+  const creates = client.calls.map((call) => call[0]);
+  assert.equal(creates.indexOf("sandbox.create"), 0);
+  assert.ok(creates.indexOf("workspace.mount") > creates.indexOf("sandbox.create"));
+});
+
+test("seventeen in-flight branches use two sandboxes at the same time", async () => {
+  let next = 0;
+  let mounted = 0;
+  let release;
+  const gate = new Promise((resolveGate) => { release = resolveGate; });
+  const client = scriptedClient({
+    create: async () => ({ sandbox: String(++next), image: "sha256:abc" }),
+    mount: async (sandbox, branch) => {
+      mounted += 1;
+      if (mounted === 17) release();
+      await gate;
+      return { sandbox, path: `/workspaces/${branch}`, image: "sha256:abc" };
+    },
+  });
+  const branches = Array.from({ length: 17 }, (_, index) => `hyp-${index + 1}`);
+  const pending = verifyBranches(client, { branches, command: "npm test", jobs: 17 });
+  await gate;
+  assert.equal(mounted, 17);
+  assert.equal(next, 2);
+  await pending;
   assert.equal(named(client.calls, "sandbox.create").length, 2);
   assert.equal(named(client.calls, "sandbox.close").length, 2);
   const mounts = named(client.calls, "workspace.mount");
-  assert.equal(mounts.length, 17);
-  assert.equal(mounts[0][1][0], "1");
-  assert.equal(mounts[16][1][0], "2");
+  assert.equal(mounts.filter((call) => call[1][0] === "1").length, 16);
+  assert.equal(mounts.filter((call) => call[1][0] === "2").length, 1);
+});
+
+test("a refused sandbox create is one attempt and is not retried", async () => {
+  const client = scriptedClient({
+    create: async () => {
+      const error = new Error("image missing");
+      error.code = "Failed";
+      throw error;
+    },
+  });
+  const { results, sandboxCloseErrors } = await verifyBranches(client, {
+    branches: ["hyp-1", "hyp-2"],
+    command: "npm test",
+    jobs: 2,
+  });
+  assert.equal(named(client.calls, "sandbox.create").length, 1);
+  assert.equal(named(client.calls, "sandbox.close").length, 0);
+  assert.equal(sandboxCloseErrors.length, 0);
+  assert.equal(named(client.calls, "workspace.mount").length, 0);
+  for (const result of results) {
+    assert.equal(result.pass, false);
+    assert.equal(result.error.code, "Failed");
+    assert.equal(result.attempts.mount, 0);
+  }
+});
+
+test("a landed commit stays when the following unmount fails", async () => {
+  const client = scriptedClient({
+    unmount: async () => {
+      const error = new Error("daemon gone");
+      error.code = "NoSuchSandbox";
+      throw error;
+    },
+  });
+  const { results } = await verifyBranches(client, { branches: ["hyp-1"], command: "npm test", jobs: 1 });
+  const result = results[0];
+  assert.equal(result.pass, true);
+  assert.equal(result.exitCode, 0);
+  assert.equal(result.commit.head, "c0");
+  assert.equal(result.newStored, 4);
+  assert.equal(result.error, null);
+  assert.equal(result.conflict, null);
+  assert.equal(result.unmount.code, "NoSuchSandbox");
+  assert.equal(result.attempts.commit, 1);
+  assert.equal(result.attempts.unmount, 1);
+  assert.equal(named(client.calls, "workspace.commit").length, 1);
+  assert.equal(named(client.calls, "workspace.unmount").length, 1);
+  assert.equal(named(client.calls, "workspace.unmount")[0][1][1], false);
+  const text = renderReport({
+    project: "shop",
+    layerfs: "1.1.0",
+    commit: "abc",
+    stored: 1,
+    storedFrom: "volume",
+    unitBytes: 1,
+    unitBytesFrom: "source-scan",
+    candidates: 1,
+    worktreeBaseline: 1,
+    savedBytes: 0,
+    timesSmaller: 1,
+    pass: 1,
+    fail: 0,
+    results,
+  });
+  assert.match(text, /c0; unmount NoSuchSandbox/);
+  assert.match(text, /pass/);
 });
 
 test("Conflict is committed once and the workspace is discarded", async () => {

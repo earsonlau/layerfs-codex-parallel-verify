@@ -65,7 +65,7 @@ Success prints `function function`. If it does not, stop and report the error. D
 
 ### 5. Settings for a real project
 
-A live Init needs a Linux `layerfs-daemon` and a runtime image built from **this same commit**. Build them the way `api/README.md` and `api/how-to-use/runtime.md` in the checkout describe (`npm --prefix "$LAYERFS_REPO/api" run build:native` builds the addon on a macOS or Linux host). Then:
+A live Init needs a Linux `layerfs-daemon` and a runtime image built from **this same commit**. That image needs `node` and `npm`: `init --install` and `verify-all --command "npm test"` run inside the Sandbox, and the size probe runs `node`. Build the image the way `api/README.md` and `api/how-to-use/runtime.md` in the checkout describe (`npm --prefix "$LAYERFS_REPO/api" run build:native` builds the addon on a macOS or Linux host). Then:
 
 ```bash
 export LAYERFS_HOME="$HOME/.layerfs-codex"
@@ -141,9 +141,9 @@ node bin/codex-parallel-verify.js discard --name shop hyp-2
 node bin/codex-parallel-verify.js keep --name shop hyp-1
 ```
 
-Add `--json` for one JSON object on stdout. `--home` overrides `LAYERFS_HOME`.
+Add `--json` for one JSON object on stdout. `--home` overrides `LAYERFS_HOME`. `spawn-n`'s default prefix is `hyp` (`hyp-1`, `hyp-2`, …). Pass `--prefix` to use another one.
 
-`verify-all` runs **mount → exec → commit → unmount** per Branch. A non-zero verify command is still committed once, with the exit code in the message. Default concurrency is 4. `--sequenced` is one Branch at a time. `--parallel` is all of them. Sandboxes hold 16 Workspaces; the CLI creates as many as it needs and closes each once.
+`verify-all` runs **mount → exec → commit → unmount** per Branch. A non-zero verify command is still committed once, with the exit code in the message. If that commit returns and the following unmount fails, the commit stays on the result and the unmount failure is reported separately. Default concurrency is 4. `--sequenced` is one Branch at a time. `--parallel` is all of them. Sandboxes hold 16 Workspaces. One is created when a Branch is about to mount and every Sandbox already started for this run is full, then each is closed once after the run.
 
 `discard` and `keep` only change the ledger. They do not copy a tree, check out a worktree, or delete commits. Losers you discard stay as deduplicated history. `unmount(ws, true)` drops an uncommitted overlay and also copies nothing.
 

@@ -3,6 +3,7 @@ import { isUsage, refusalOf, UsageError } from "./errors.js";
 import { openHost } from "./host.js";
 import { loadSdk } from "./load.js";
 import { renderInit, renderReport, renderSpawn } from "./format.js";
+import { DEFAULT_PREFIX } from "./names.js";
 import { pin } from "./pin.js";
 
 const BOOLEAN = new Set(["json", "parallel", "sequenced", "discard-losers", "help", "version"]);
@@ -71,6 +72,7 @@ Commands
   discard --name <project> <branch> [branch...]
   keep --name <project> <branch> [branch...]
 
+spawn-n's default prefix is hyp, so the branches are hyp-1, hyp-2, and so on.
 Each LayerFS call is one attempt. A Conflict is reported and not retried.
 Add --json for one JSON object on stdout.
 
@@ -187,7 +189,7 @@ export async function main(argv, deps = {}) {
           home: options.home,
           name,
           count,
-          prefix: flags.prefix ?? "candidate",
+          prefix: flags.prefix ?? DEFAULT_PREFIX,
           from: flags.from ?? "main",
         });
         const names = ledger.requested;

@@ -1,0 +1,18 @@
+{
+  "name": "codex-parallel-verify",
+  "version": "0.1.0",
+  "description": "Parallel multi-path verification on one LayerFS Store for OpenAI Codex. Replaces N git worktrees and repeated dependency installs.",
+  "keywords": ["layerfs", "codex", "worktree", "verify"],
+  "skills": "./.agents/skills/codex-parallel-verify/SKILL.md",
+  "interface": {
+    "displayName": "LayerFS for Codex parallel verify",
+    "shortDescription": "Fork one Branch per Codex hypothesis and verify them on one Store.",
+    "longDescription": "Codex users spawn a git worktree per candidate and reinstall dependencies in each. This plugin initializes a project once, forks a Branch per hypothesis, runs test, build, and lint in Workspaces, and reports pass or fail next to the Store's stored size versus a worktree baseline.",
+    "developerName": "LayerFS",
+    "category": "Coding",
+    "capabilities": ["parallel-verify", "worktree-replacement"],
+    "brandColor": "#1F7A4D",
+    "logo": "./logo.svg",
+    "defaultPrompt": "Verify these candidates in parallel on one LayerFS Store instead of git worktrees."
+  }
+}

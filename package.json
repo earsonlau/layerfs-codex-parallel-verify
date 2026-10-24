@@ -1,0 +1,43 @@
+{
+  "name": "layerfs-codex-parallel-verify",
+  "version": "0.1.0",
+  "description": "LayerFS plugin that verifies many Codex hypotheses on one shared Store instead of N git worktrees.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "codex-parallel-verify": "./bin/codex-parallel-verify.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "AGENTS.md",
+    "logo.svg",
+    "layerfs.json",
+    ".agents",
+    ".codex-plugin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "start": "node ./bin/codex-parallel-verify.js"
+  },
+  "peerDependencies": {
+    "@layerfs/agent": "1.1.0",
+    "@layerfs/runtime": "1.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@layerfs/agent": {
+      "optional": true
+    },
+    "@layerfs/runtime": {
+      "optional": true
+    }
+  }
+}

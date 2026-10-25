@@ -1,6 +1,6 @@
 # Codex parallel verify
 
-Plugin id `codex-parallel-verify`. LayerFS **1.1.0** commit `9f97a7ec95b662e9cb288704afa165feff132cfa`.
+Plugin id `codex-parallel-verify`. LayerFS **1.1.0** commit `ad78914e36b258b360daf13aec164b5655814689`.
 
 Use this instead of `codex exec -C <worktree>` and `codex --worktree` when several hypotheses share one tree. One Store holds the project, including dependencies. Each candidate is a Branch. A Workspace is not a host directory: do not pass `/workspaces/N` to `codex -C`.
 

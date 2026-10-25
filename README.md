@@ -2,7 +2,7 @@
 
 Plugin id `codex-parallel-verify`. One shared LayerFS Store, one Branch per Codex hypothesis, verify commands in parallel. Disk stays near the size of one tree instead of N git worktrees.
 
-LayerFS **v1.1.0**, pinned in [`layerfs.json`](layerfs.json) at commit `9f97a7ec95b662e9cb288704afa165feff132cfa`.
+LayerFS **v1.1.0**, pinned in [`layerfs.json`](layerfs.json) at commit `ad78914e36b258b360daf13aec164b5655814689`.
 
 The public packages are `@layerfs/agent` and `@layerfs/runtime`. This plugin does not import `@layerfs/agent/internal` or `@layerfs/backend`. Every LayerFS call is one attempt. A refusal is not retried.
 
@@ -40,12 +40,12 @@ node bin/codex-parallel-verify.js --help
 
 ```bash
 git clone https://github.com/Ephemeral-AI-Lab/layerfs.git "$HOME/layerfs"
-git -C "$HOME/layerfs" checkout 9f97a7ec95b662e9cb288704afa165feff132cfa
+git -C "$HOME/layerfs" checkout ad78914e36b258b360daf13aec164b5655814689
 export LAYERFS_REPO="$HOME/layerfs"
 git -C "$LAYERFS_REPO" rev-parse HEAD
 ```
 
-The printed commit must be exactly `9f97a7ec95b662e9cb288704afa165feff132cfa`. If it is not, stop. Do not use another commit.
+The printed commit must be exactly `ad78914e36b258b360daf13aec164b5655814689`. If it is not, stop. Do not use another commit.
 
 ### 4. Link the JavaScript packages
 

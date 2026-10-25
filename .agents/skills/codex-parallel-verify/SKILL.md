@@ -10,7 +10,7 @@ description: >
 
 # Codex parallel verify
 
-LayerFS **1.1.0**, commit `9f97a7ec95b662e9cb288704afa165feff132cfa`. Plugin id `codex-parallel-verify`.
+LayerFS **1.1.0**, commit `ad78914e36b258b360daf13aec164b5655814689`. Plugin id `codex-parallel-verify`.
 
 Codex CLI sets the session root with `-C` / `--cd` (`codex exec -C ../hyp-1 "…"`). `codex exec --worktree` and `codex --worktree` create a managed git worktree and use it as that root. The desktop app does the same per thread. Each of those directories is a full checkout, and each one reinstalls dependencies.
 
@@ -29,7 +29,7 @@ The CLI in this plugin makes those calls. Prefer it to hand-written scripts.
 ### 1. Init once, dependencies included
 
 ```bash
-export LAYERFS_REPO="$HOME/layerfs"          # checkout 9f97a7ec95b662e9cb288704afa165feff132cfa
+export LAYERFS_REPO="$HOME/layerfs"          # checkout ad78914e36b258b360daf13aec164b5655814689
 export LAYERFS_HOME="$HOME/.layerfs-codex"
 export LAYERFS_IMAGE="sha256:<64 hex>"
 export LAYERFS_DAEMON="/absolute/path/to/layerfs-daemon"

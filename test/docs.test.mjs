@@ -15,7 +15,7 @@ function walk(dir) {
 }
 
 test("layerfs.json pins the v1.1.0 commit and the plugin id", () => {
-  assert.equal(pin.commit, "9f97a7ec95b662e9cb288704afa165feff132cfa");
+  assert.equal(pin.commit, "ad78914e36b258b360daf13aec164b5655814689");
   assert.equal(pin.layerfs, "1.1.0");
   assert.equal(pin.id, "codex-parallel-verify");
   assert.deepEqual(pin.packages, ["@layerfs/agent", "@layerfs/runtime"]);
@@ -45,7 +45,7 @@ test("README Install, AGENTS.md, and the skill teach the Codex path", () => {
   const agents = readFileSync(join(PACKAGE_ROOT, "AGENTS.md"), "utf8");
   const skill = readFileSync(join(PACKAGE_ROOT, ".agents/skills/codex-parallel-verify/SKILL.md"), "utf8");
   for (const text of [readme, agents, skill]) {
-    assert.match(text, /9f97a7ec95b662e9cb288704afa165feff132cfa/);
+    assert.match(text, /ad78914e36b258b360daf13aec164b5655814689/);
     assert.match(text, /codex exec -C/);
     assert.match(text, /--worktree/);
     assert.match(text, /Conflict/);

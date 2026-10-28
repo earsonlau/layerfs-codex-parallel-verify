@@ -21,10 +21,10 @@ test("layerfs.json pins the v1.1.0 commit and the plugin id", () => {
   assert.deepEqual(pin.packages, ["@layerfs/agent", "@layerfs/runtime"]);
 });
 
-test("package.json is the MIT plugin at 0.1.0", () => {
+test("package.json is the MIT plugin at 0.1.1", () => {
   const pkg = JSON.parse(readFileSync(join(PACKAGE_ROOT, "package.json"), "utf8"));
   assert.equal(pkg.name, "layerfs-codex-parallel-verify");
-  assert.equal(pkg.version, "0.1.0");
+  assert.equal(pkg.version, "0.1.1");
   assert.equal(pkg.license, "MIT");
   assert.equal(pkg.type, "module");
   assert.equal(pkg.bin["codex-parallel-verify"], "./bin/codex-parallel-verify.js");

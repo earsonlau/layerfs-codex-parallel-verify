@@ -1,6 +1,6 @@
 {
   "name": "layerfs-codex-parallel-verify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "LayerFS plugin that verifies many Codex hypotheses on one shared Store instead of N git worktrees.",
   "license": "MIT",
   "type": "module",

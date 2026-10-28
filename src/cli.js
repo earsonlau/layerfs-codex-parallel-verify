@@ -146,7 +146,7 @@ export async function main(argv, deps = {}) {
     return 0;
   }
   if (parsed.command === "version") {
-    writeOut(io, `${pin.layerfs} ${pin.commit}\nplugin 0.1.0 ${pin.id}`);
+    writeOut(io, `${pin.layerfs} ${pin.commit}\nplugin 0.1.1 ${pin.id}`);
     return 0;
   }
   const known = new Set(["init", "spawn-n", "verify-all", "report", "discard", "keep"]);

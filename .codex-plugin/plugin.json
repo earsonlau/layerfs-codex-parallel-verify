@@ -1,6 +1,6 @@
 {
   "name": "codex-parallel-verify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parallel multi-path verification on one LayerFS Store for OpenAI Codex. Replaces N git worktrees and repeated dependency installs.",
   "keywords": ["layerfs", "codex", "worktree", "verify"],
   "skills": "./.agents/skills/codex-parallel-verify/SKILL.md",

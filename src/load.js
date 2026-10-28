@@ -55,7 +55,7 @@ export async function loadSdk(env = process.env) {
     error.code = "InvalidInput";
     throw error;
   }
-  const agentEntry = join(root, "api/agent/sdk/src/index.js");
+  const agentEntry = join(root, "api/agent/src/index.js");
   const runtimeEntry = join(root, "api/runtime/src/index.js");
   if (!existsSync(agentEntry) || !existsSync(runtimeEntry)) {
     const error = new Error(`LAYERFS_REPO ${root} is not a LayerFS checkout with api/agent and api/runtime. Checkout ${pin.commit}.`);

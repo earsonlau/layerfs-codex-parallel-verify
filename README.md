@@ -2,7 +2,7 @@
 
 Plugin id `codex-parallel-verify`. One shared LayerFS Store, one Branch per Codex hypothesis, verify commands in parallel. Disk stays near the size of one tree instead of N git worktrees.
 
-LayerFS **v1.1.0**, pinned in [`layerfs.json`](layerfs.json) at commit `ad78914e36b258b360daf13aec164b5655814689`.
+LayerFS **v1.1.0**, pinned in [`layerfs.json`](layerfs.json) at commit `4b5276216a2e9f780194a554ef9f0c33f9b6ba6d`.
 
 The public packages are `@layerfs/agent` and `@layerfs/runtime`. This plugin does not import `@layerfs/agent/internal` or `@layerfs/backend`. Every LayerFS call is one attempt. A refusal is not retried.
 
@@ -40,12 +40,12 @@ node bin/codex-parallel-verify.js --help
 
 ```bash
 git clone https://github.com/Ephemeral-AI-Lab/layerfs.git "$HOME/layerfs"
-git -C "$HOME/layerfs" checkout ad78914e36b258b360daf13aec164b5655814689
+git -C "$HOME/layerfs" checkout 4b5276216a2e9f780194a554ef9f0c33f9b6ba6d
 export LAYERFS_REPO="$HOME/layerfs"
 git -C "$LAYERFS_REPO" rev-parse HEAD
 ```
 
-The printed commit must be exactly `ad78914e36b258b360daf13aec164b5655814689`. If it is not, stop. Do not use another commit.
+The printed commit must be exactly `4b5276216a2e9f780194a554ef9f0c33f9b6ba6d`. If it is not, stop. Do not use another commit.
 
 ### 4. Link the JavaScript packages
 
@@ -55,7 +55,7 @@ In the checkout, `api/` is an npm workspace. Installing it links the packages; i
 npm --prefix "$LAYERFS_REPO/api" install
 ```
 
-This plugin loads `@layerfs/agent` from `api/agent/sdk` and `@layerfs/runtime` from `api/runtime` through `LAYERFS_REPO`. Confirm both public entry points load:
+This plugin loads `@layerfs/agent` from `api/agent` and `@layerfs/runtime` from `api/runtime` through `LAYERFS_REPO`. Confirm both public entry points load:
 
 ```bash
 node --input-type=module -e 'import { loadSdk } from "./src/load.js"; const sdk = await loadSdk(); console.log(typeof sdk.LayerFS.open, typeof sdk.LayerFSRuntime.open)'
@@ -65,7 +65,7 @@ Success prints `function function`. If it does not, stop and report the error. D
 
 ### 5. Settings for a real project
 
-A live Init needs a Linux `layerfs-daemon` and a runtime image built from **this same commit**. That image needs `node` and `npm`: `init --install` and `verify-all --command "npm test"` run inside the Sandbox, and the size probe runs `node`. Build the image the way `api/README.md` and `api/how-to-use/runtime.md` in the checkout describe (`npm --prefix "$LAYERFS_REPO/api" run build:native` builds the addon on a macOS or Linux host). Then:
+A live Init needs a Linux `layerfs-daemon` and a runtime image built from **this same commit**. That image needs `node` and `npm`: `init --install` and `verify-all --command "npm test"` run inside the Sandbox, and the size probe runs `node`. Build the image the way `api/README.md` and `api/docs/runtime.md` in the checkout describe (`npm --prefix "$LAYERFS_REPO/api" run build:native` builds the addon on a macOS or Linux host). Then:
 
 ```bash
 export LAYERFS_HOME="$HOME/.layerfs-codex"

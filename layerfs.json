@@ -2,6 +2,6 @@
   "id": "codex-parallel-verify",
   "name": "LayerFS for Codex parallel verify",
   "layerfs": "1.1.0",
-  "commit": "ad78914e36b258b360daf13aec164b5655814689",
+  "commit": "4b5276216a2e9f780194a554ef9f0c33f9b6ba6d",
   "packages": ["@layerfs/agent", "@layerfs/runtime"]
 }

@@ -18,7 +18,7 @@ test("a missing install names the pinned commit and does not throw a raw module 
 
 test("LAYERFS_REPO loads the public entry points from a checkout", async () => {
   const root = await mkdtemp(join(tmpdir(), "cpv-repo-"));
-  const agentDir = join(root, "api/agent/sdk/src");
+  const agentDir = join(root, "api/agent/src");
   const runtimeDir = join(root, "api/runtime/src");
   await mkdir(agentDir, { recursive: true });
   await mkdir(runtimeDir, { recursive: true });
